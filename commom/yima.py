@@ -86,9 +86,9 @@ class Singleton(type):
 class YiMa(metaclass=Singleton):
     _URL = "http://api.fxhyd.cn/UserInterface.aspx"
 
-    def __init__(self, app:int):
-        self._username = "angel101"
-        self._password = "god110god"
+    def __init__(self, app: int):
+        self._username = "wochuan"
+        self._password = "lls.5121314"
         self._default_timeout = 15
         self._token = ""
         self.app = app
