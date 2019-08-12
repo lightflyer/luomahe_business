@@ -86,16 +86,16 @@ class Singleton(type):
 class YiMa(metaclass=Singleton):
     _URL = "http://api.fxhyd.cn/UserInterface.aspx"
 
-    def __init__(self, app: int):
-        self._username = "wochuan"
-        self._password = "lls.5121314"
+    def __init__(self):
+        self._username = "angel101"
+        self._password = "god110god"
         self._default_timeout = 15
         self._token = ""
-        self.app = app
 
     def _log(self, msg):
         if __log__:
             __log__.debug(msg)
+        print(msg)
 
     def _get_token(self):
         try:
@@ -140,8 +140,8 @@ class YiMa(metaclass=Singleton):
         except Exception as ex:
             return -1, str(ex)
 
-    def get_number(self):
-        param = {"action": "getmobile", "token": self._token, "itemid": self.app}
+    def get_number(self, app: int):
+        param = {"action": "getmobile", "token": self._token, "itemid": app}
         try:
             response = requests.get(self._URL, params=param, timeout=self._default_timeout)
             text = response.text
@@ -154,8 +154,8 @@ class YiMa(metaclass=Singleton):
         except Exception as ex:
             return -1, str(ex)
 
-    def get_code(self, number: str, wait: int = 300):
-        param = {"action": "getsms", "token": self._token, "itemid": self.app, "mobile": number}
+    def get_code(self, app: int, number: str, wait: int = 300):
+        param = {"action": "getsms", "token": self._token, "itemid": app, "mobile": number}
 
         def sleep(num: int):
             for i in range(num):
@@ -171,7 +171,7 @@ class YiMa(metaclass=Singleton):
             self._log(text)
             if not text.startswith("success|"):
                 if text == "2007":
-                    self.block_number(self.app, number)
+                    self.block_number(app, number)
                     return int(text), ERROR_CODE[int(text)]
                 if text != "3001":
                     print("get code:", text, ERROR_CODE[int(text)])
@@ -195,9 +195,9 @@ class YiMa(metaclass=Singleton):
 
             if text.startswith("success|"):
                 sms = text.split("|")[1]
-                ic = re.search(REGEX_PATTEN[self.app], sms)
+                ic = re.search(REGEX_PATTEN[app], sms)
                 if ic:
-                    self.block_number(self.app, number)
+                    self.block_number(app, number)
                     return 0, ic.group()
 
             elif text != "3001":
